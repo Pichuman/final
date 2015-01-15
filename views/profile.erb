@@ -1,0 +1,13 @@
+<script type="text/javascript" src="/javascripts/scripts.js"></script>
+
+<h1>Your Profile</h1>
+
+<form action="upload" method="post" enctype="multipart/form-data">
+  <h3>Upload Image</h3>
+  <input type="file" name="image">
+  </br>
+  </br>
+  <input type="submit" value="Upload">
+</form>
+<img src="/public/uploads/<%@image%>">
+<p><button type="button"><a href="/">Go back</a></button></p>
