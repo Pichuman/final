@@ -64,18 +64,43 @@ post "/login" do
   if user == nil
     redirect "/baduser"
   elsif user[:password] == password
+    @uname=uname
     redirect "/profile"
   else
     redirect "/loginfail"
   end
 end
+
+
+=begin
 post "/upload" do
-  @account = DB[:account]
+  @accounts = DB[:account]
+  #Upload to local directory
+  #File.open('public/uploads/' + params['image'][:filename], "w") do |f|
+   # f.write(params['image'][:tempfile].read)
+  #end
+  #image=params['image'][:tempfile].read
+  f = File.new("public/images/Dog001.bmp","rb")
+  image = f.read
+  f.close
+  blob = SQLite3::Blob.new image
+  @accounts.insert(:image => blob)
+  redirect "/profile"
+end
+
+=end
+
+post "/upload" do
+  db = SQLite3::Database.open 'database.db'
   #Upload to local directory
   File.open('public/uploads/' + params['image'][:filename], "w") do |f|
-    f.write(params['image'][:tempfile].read)
+   f.write(params['image'][:tempfile].read)
   end
-  @image=params[:filename]
-  #@accounts.insert(:image => image)
-  redirect "/profile"
+  name=params['uname']
+  pic=params['image'][:filename]
+  a = File.new("public/uploads/" + pic,"rb")
+  image = a.read
+  a.close
+  blob = SQLite3::Blob.new image
+  db.execute("UPDATE account SET image=(?) WHERE uname=(?)", blob, name)
 end
